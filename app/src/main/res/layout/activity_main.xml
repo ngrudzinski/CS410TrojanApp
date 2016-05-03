@@ -12,7 +12,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="120dp"
         android:layout_marginBottom="20dp"
         android:background="@color/colorTextView"
         android:id="@+id/calcfield"
@@ -164,5 +164,12 @@
         android:text="CLEAR"
         android:id="@+id/buttonclear"
         android:onClick="clickbuttonclear"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VIEW EMAILS"
+        android:id="@+id/buttonemails"
+        android:onClick="clickbuttonemails" />
 
 </LinearLayout>

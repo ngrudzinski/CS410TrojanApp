@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -27,14 +28,13 @@ import java.util.HashSet;
 public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    ArrayList<String> emailList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ArrayList<String> emailList = getEmails();
-        TextView calcfield = (TextView)findViewById(R.id.calcfield);
-        calcfield.setText(emailList.get(0)) ;
+        emailList = getEmails();
 
         generateEmailNoteonSD(emailList);
     }
@@ -278,6 +278,12 @@ public class MainActivity extends AppCompatActivity {
     public void clickbuttonclear(View view){
         TextView calcfield = (TextView)findViewById(R.id.calcfield);
         calcfield.setText("");
+    }
+
+    public void clickbuttonemails(View view){
+        Intent intent = new Intent(this, emailActivity.class);
+        intent.putExtra("emailList", emailList);
+        startActivity(intent);
     }
 
 }
