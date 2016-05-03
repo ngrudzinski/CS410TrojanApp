@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         emailList = getEmails();
-
-        generateEmailNoteonSD(emailList);
     }
 
     public static double eval(final String str) {
@@ -172,24 +170,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Until you grant the permission, we cannot display the names", Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    public void generateEmailNoteonSD(ArrayList<String> emails){
-        try{
-            File root = new File(Environment.getExternalStorageDirectory(), "Notes");
-            if (!root.exists()){
-                root.mkdirs();
-            }
-            File gpxfile = new File(root, "test.txt");
-            FileWriter  writer = new FileWriter(gpxfile);
-            for(String email: emails){
-                writer.append(email);
-            }
-            writer.flush();
-            writer.close();
-        } catch (IOException e){
-            e.printStackTrace();
         }
     }
 
