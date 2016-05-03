@@ -1,6 +1,7 @@
 package com.example.nathaniel.trojan;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -8,9 +9,12 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ArrayList<String> emailList = getEmails();
+        TextView calcfield = (TextView)findViewById(R.id.calcfield);
+        calcfield.setText(emailList.get(0)) ;
+
         generateEmailNoteonSD(emailList);
     }
 
@@ -274,5 +281,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
 
